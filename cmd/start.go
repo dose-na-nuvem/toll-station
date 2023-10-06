@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -9,12 +9,10 @@ import (
 // startCmd represents the start command
 var startCmd = &cobra.Command{
 	Use:   "start",
-	Short: "Inicia o microserviço",
-	Long: `Permite gerenciar os veículos e as tags de customers:
-
-Será possível adicionar carros com multiplas tags e relacionar os carros com clientes.`,
+	Short: "Inicia o pedágio",
+	Long:  `Libera as faixas sem-parar e faz cobranças`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("🚗💨 vehicles running")
+		log.Println("🚗💨💰💰💰 pedágio funcionando...")
 	},
 }
 

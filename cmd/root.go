@@ -8,12 +8,11 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use: "vehicles",
+	Use: "pedagio",
 
-	Short: "Controle de veículos e tags",
+	Short: "Central de Pedágio",
 
-	Long: `Permite gerenciar os veículos e as tags de customers:
-Será possível adicionar carros com multiplas tags e relacionar os carros com os donos atuais.`,
+	Long: `Simula um pedágio aguardando carros, realizando cobranças e controlando cancelas`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
