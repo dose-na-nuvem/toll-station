@@ -13,7 +13,7 @@ test:
 
 .PHONY: build
 build:
-	@go build -o ./_build/vehicles .
+	@go build -o ./_build/pedagio .
 
 .PHONY: install-tools
 install-tools:
