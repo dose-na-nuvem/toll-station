@@ -3,8 +3,8 @@ syntax = "proto3";
 package traffic.v1;
 option go_package = "github.com/dose-na-nuvem/toll-station/v1";
 
-service TrafficService {
-  rpc Car(Tag) returns (Catraca) {};
+service TollStationService {
+  rpc OpenGate(Tag) returns (Catraca) {};
 }
 
 message Tag {
