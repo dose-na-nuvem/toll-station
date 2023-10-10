@@ -19,3 +19,6 @@ build:
 install-tools:
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.53.2
 
+.PHONY: trafego-http
+trafego-http:
+	@curl -X POST -H "Content-type: application/json" -d '{"tag":"abcdefg1234567890"}' http://localhost:61000
