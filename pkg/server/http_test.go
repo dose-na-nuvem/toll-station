@@ -25,7 +25,7 @@ func TestNewHTTP(t *testing.T) {
 	}
 
 	// test
-	_, err := NewHTTP(cfg, /*NewCustomerHandler(cfg.Logger, nil)*/)
+	_, err := NewHTTP(cfg, NewTollStationHandler(cfg.Logger))
 
 	// verify
 	assert.NoError(t, err)

@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-var errNoTLSConfig = errors.New("servidor sem configuração de TLS")
+// var errNoTLSConfig = errors.New("servidor sem configuração de TLS")
 
 type HTTP struct {
 	logger *zap.Logger
@@ -22,12 +22,12 @@ type HTTP struct {
 	certKeyFile string
 }
 
-func NewHTTP(cfg *config.Cfg, /*tollStationHandler http.Handler*/) (*HTTP, error) {
+func NewHTTP(cfg *config.Cfg, tollStationHandler http.Handler) (*HTTP, error) {
 	mux := http.NewServeMux()
-	//mux.Handle("/", )
+	mux.Handle("/", tollStationHandler)
 
 	srv := &http.Server{
-		Addr:              cfg.Server.HTTP.Endpoint,
+		Addr:              "127.0.0.1:8080"/*cfg.Server.HTTP.Endpoint*/,
 		Handler:           mux,
 		ReadHeaderTimeout: cfg.Server.HTTP.ReadHeaderTimeout * time.Millisecond,
 	}
