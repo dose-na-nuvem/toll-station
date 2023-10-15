@@ -16,7 +16,7 @@ test:
 
 .PHONY: build
 build:
-	@go build -o ./_build/toll-station .
+	@go build -o ./_build/pedagio .
 
 .PHONY: simule
 simule: k6-http
@@ -30,8 +30,10 @@ gen-k6-http:
 # CUIDADO: irá sobrescrever quaisquer scripts na pasta de destino
 	@docker run -u 1000 --rm -v .:/workdir -w /workdir openapitools/openapi-generator-cli generate -g k6 -i openapiv2/traffic/v1/traffic.swagger.json -o local/k6-http
 
-
 .PHONY: install-tools
 install-tools:
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.53.2
 
+.PHONY: trafego-http
+trafego-http:
+	@curl -X POST -H "Content-type: application/json" -d '{"tag":"abcdefg1234567890"}' http://$(HTTP_HOSTNAME)

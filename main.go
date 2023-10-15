@@ -1,12 +1,9 @@
 package main
 
 import (
-	"log"
-
-	"github.com/dose-na-nuvem/vehicles/cmd"
+	"github.com/dose-na-nuvem/toll-station/cmd"
 )
 
 func main() {
-	log.Println("🚗💨")
 	cmd.Execute()
 }

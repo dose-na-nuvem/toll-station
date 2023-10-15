@@ -1,0 +1,111 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Pedágio",
+    "version": "1.0",
+    "contact": {
+      "name": "dose-na-nuvem",
+      "url": "https://github.com/dose-na-nuvem/toll-station"
+    },
+    "license": {
+      "name": "Apache License 2.0",
+      "url": "https://github.com/dose-na-nuvem/toll-station/blob/main/LICENSE"
+    }
+  },
+  "tags": [
+    {
+      "name": "TrafficService"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/traffic": {
+      "post": {
+        "operationId": "TrafficService_Car",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Catraca"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/trafficv1Tag"
+            }
+          }
+        ],
+        "tags": [
+          "TrafficService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "trafficv1Tag": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "type": "string"
+        }
+      }
+    },
+    "v1Catraca": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["close", "open"]
+        }
+      }
+    }
+  }
+}

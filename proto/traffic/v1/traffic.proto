@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package traffic.v1;
+option go_package = "github.com/dose-na-nuvem/toll-station/v1";
+
+service TollStationService {
+  rpc OpenGate(Tag) returns (Catraca) {};
+}
+
+message Tag {
+  string tag = 1;
+}
+
+
+message Catraca {
+  string status = 1;
+}
+
+message Error {
+  uint32 code = 1;
+  string message = 2;
+}
