@@ -32,7 +32,8 @@ func NewTollStationHandler(logger *zap.Logger /*, store CustomerStore*/) *TollSt
 
 func (h *TollStationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
-	b, err := json.Marshal(true)
+	openGate := true
+	b, err := json.Marshal(openGate)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
