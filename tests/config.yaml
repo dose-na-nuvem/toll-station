@@ -1,0 +1,3 @@
+server:
+  http:
+    endpoint: localhost:8080
