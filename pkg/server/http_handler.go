@@ -38,7 +38,7 @@ func (h *TollStationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tag := r.FormValue("tag")
 
 	gateOpenState := shouldOpenGate(tag)
-	h.logger.Info("Estado do portão", zap.Bool("gate", gateOpenState))
+	h.logger.Info("Estado do portão", zap.Bool("aberto", gateOpenState))
 
 	b, err := json.Marshal(gateOpenState)
 	if err != nil {
