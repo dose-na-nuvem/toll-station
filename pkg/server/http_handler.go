@@ -2,7 +2,9 @@ package server
 
 import (
 	"encoding/json"
+	"math/rand"
 	"net/http"
+	"time"
 
 	// "github.com/dose-na-nuvem/customers/pkg/model"
 	// "github.com/dose-na-nuvem/customers/pkg/telemetry"
@@ -32,8 +34,13 @@ func NewTollStationHandler(logger *zap.Logger /*, store CustomerStore*/) *TollSt
 
 func (h *TollStationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
-	openGate := true
-	b, err := json.Marshal(openGate)
+	// Get the tag from the POST request.
+	tag := r.FormValue("tag")
+
+	gateOpenState := shouldOpenGate(tag)
+	h.logger.Info("Estado do portão", zap.Bool("aberto", gateOpenState))
+
+	b, err := json.Marshal(gateOpenState)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
@@ -52,6 +59,23 @@ func (h *TollStationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// default:
 	// 	w.WriteHeader(http.StatusNotImplemented)
 	// }
+}
+
+func randomDelayMs() {
+	r := rand.Intn(300) + 10
+	time.Sleep(time.Duration(r) * time.Millisecond)
+}
+
+func shouldOpenGate(tag string) bool {
+	// Todo: Consultar a tag/cliente e fazer pagamentos
+	r := rand.Intn(100)
+	if r < 50 {
+		randomDelayMs()
+		return true
+	}
+
+	// Otherwise, keep the gate closed.
+	return false
 }
 
 // func (h *CustomerHandler) createCustomer(w http.ResponseWriter, r *http.Request) {
