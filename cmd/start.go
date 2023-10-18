@@ -2,11 +2,9 @@ package cmd
 
 import (
 	"context"
-	"log"
 	"os"
 	"os/signal"
 
-	"github.com/dose-na-nuvem/toll-station/config"
 	"github.com/dose-na-nuvem/toll-station/pkg/service"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -18,9 +16,7 @@ var startCmd = &cobra.Command{
 	Short: "Inicia o pedágio",
 	Long:  `Libera as faixas sem-parar e faz cobranças`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cfg := config.New()
 		ctx := context.Background()
-
 		svc := service.New(cfg)
 
 		go func() {
@@ -37,16 +33,14 @@ var startCmd = &cobra.Command{
 			cfg.Logger.Info("serviço finalizado com sucesso")
 		}()
 
-		err := svc.Start(ctx)
+		cfg.Logger.Info("inicializando o serviço",
+			zap.String("http", cfg.Server.HTTP.Endpoint))
 
+		err := svc.Start(ctx)
 		if err != nil {
-			log.Println("Não foi possível inicializar o serviço! Abortando execução...")
+			cfg.Logger.Error("Não foi possível inicializar o serviço! Abortando execução...")
 			os.Exit(1)
 		}
 
 	},
-}
-
-func init() {
-	rootCmd.AddCommand(startCmd)
 }
