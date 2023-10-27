@@ -10,6 +10,8 @@ import (
 	"github.com/dose-na-nuvem/toll-station/config"
 	// "github.com/dose-na-nuvem/toll-station/pkg/model"
 	"github.com/dose-na-nuvem/toll-station/pkg/server"
+	"github.com/dose-na-nuvem/toll-station/pkg/telemetry"
+
 	// "github.com/dose-na-nuvem/toll-station/pkg/telemetry"
 	// "go.opentelemetry.io/otel"
 	"go.uber.org/zap"
@@ -20,18 +22,20 @@ import (
 const MaxServers = 2
 
 type TollStation struct {
-	cfg               *config.Cfg
-	srv               *server.HTTP
+	cfg *config.Cfg
+	srv *server.HTTP
 	// grpc              *server.GRPC
+	telemetry         *telemetry.Telemetry
 	asyncErrorChannel chan error
 	signalsChannel    chan os.Signal
 }
 
-func New(cfg *config.Cfg) *TollStation {
+func New(cfg *config.Cfg, tm *telemetry.Telemetry) *TollStation {
 	return &TollStation{
 		cfg:               cfg,
 		asyncErrorChannel: make(chan error, MaxServers), // buffered
 		signalsChannel:    make(chan os.Signal),
+		telemetry:         tm,
 	}
 }
 
@@ -77,7 +81,7 @@ func (t *TollStation) Start(ctx context.Context) error {
 	// 	return err
 	// }
 
-	ch := server.NewTollStationHandler(t.cfg.Logger, /*store*/)
+	ch := server.NewTollStationHandler(t.cfg.Logger, t.telemetry /*store*/)
 
 	// t.grpc, err = server.NewGRPC(c.cfg, store)
 	// if err != nil {
@@ -117,6 +121,8 @@ func (t *TollStation) Shutdown(ctx context.Context) error {
 	if err := t.srv.Shutdown(ctx); err != nil {
 		return fmt.Errorf("erro ao finalizar o serviço: %w", err)
 	}
+
+	t.telemetry.Shutdown(ctx)
 
 	// if err := t.grpc.Shutdown(ctx); err != nil {
 	// 	return fmt.Errorf("erro ao finalizar o serviço: %w", err)

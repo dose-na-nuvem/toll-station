@@ -27,7 +27,7 @@ func NewHTTP(cfg *config.Cfg, tollStationHandler http.Handler) (*HTTP, error) {
 	mux.Handle("/", tollStationHandler)
 
 	srv := &http.Server{
-		Addr:              "127.0.0.1:8080"/*cfg.Server.HTTP.Endpoint*/,
+		Addr:              cfg.Server.HTTP.Endpoint,
 		Handler:           mux,
 		ReadHeaderTimeout: cfg.Server.HTTP.ReadHeaderTimeout * time.Millisecond,
 	}
@@ -50,8 +50,8 @@ func HTTPWithServer(cfg *config.Cfg, srv *http.Server) (*HTTP, error) {
 	// }
 
 	return &HTTP{
-		logger:      cfg.Logger,
-		srv:         srv,
+		logger: cfg.Logger,
+		srv:    srv,
 		// certFile:    cfg.Server.TLS.CertFile,
 		// certKeyFile: cfg.Server.TLS.CertKeyFile,
 	}, nil
