@@ -2,6 +2,8 @@ package telemetry
 
 import (
 	"context"
+	"fmt"
+	"net"
 	"net/http"
 	"testing"
 
@@ -39,7 +41,9 @@ func TestServeMetrics(t *testing.T) {
 		counter++
 	})
 
-	endpoint := ":54321"
+	port := getFreePortWithFallback(45000)
+	endpoint := fmt.Sprintf(":%d", port)
+
 	// Chama  serveMetrics() com o endpoint e o handler.
 	go func() {
 		err := serveMetrics(endpoint, testHandler)
@@ -63,4 +67,17 @@ func TestServeMetrics(t *testing.T) {
 		t.Errorf("counter was not incremented: expected 1, got %d", counter)
 	}
 
+}
+
+func getFreePortWithFallback(defaultPort int) (port int) {
+	var a *net.TCPAddr
+	var err error
+	if a, _ = net.ResolveTCPAddr("tcp", "localhost:0"); err == nil {
+		var l *net.TCPListener
+		if l, err = net.ListenTCP("tcp", a); err == nil {
+			defer l.Close()
+			return l.Addr().(*net.TCPAddr).Port
+		}
+	}
+	return defaultPort
 }
