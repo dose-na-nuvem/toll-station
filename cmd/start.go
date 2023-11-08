@@ -6,6 +6,7 @@ import (
 	"os/signal"
 
 	"github.com/dose-na-nuvem/toll-station/pkg/service"
+	"github.com/dose-na-nuvem/toll-station/pkg/telemetry"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -17,7 +18,14 @@ var startCmd = &cobra.Command{
 	Long:  `Libera as faixas sem-parar e faz cobranças`,
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
-		svc := service.New(cfg)
+
+		tm, err := telemetry.New(ctx)
+		if err != nil {
+			cfg.Logger.Error("falha ao instrumentar código", zap.Error(err))
+		}
+		tm.Start(cfg)
+
+		svc := service.New(cfg, tm)
 
 		go func() {
 			sigint := make(chan os.Signal, 1)
@@ -36,7 +44,7 @@ var startCmd = &cobra.Command{
 		cfg.Logger.Info("inicializando o serviço",
 			zap.String("http", cfg.Server.HTTP.Endpoint))
 
-		err := svc.Start(ctx)
+		err = svc.Start(ctx)
 		if err != nil {
 			cfg.Logger.Error("Não foi possível inicializar o serviço! Abortando execução...")
 			os.Exit(1)

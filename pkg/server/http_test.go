@@ -8,6 +8,7 @@ import (
 	// "time"
 
 	"github.com/dose-na-nuvem/toll-station/config"
+	"github.com/dose-na-nuvem/toll-station/pkg/telemetry"
 	"github.com/stretchr/testify/assert"
 	// "github.com/stretchr/testify/require"
 	// "go.uber.org/zap"
@@ -25,7 +26,7 @@ func TestNewHTTP(t *testing.T) {
 	}
 
 	// test
-	_, err := NewHTTP(cfg, NewTollStationHandler(cfg.Logger))
+	_, err := NewHTTP(cfg, NewTollStationHandler(cfg.Logger, &telemetry.Telemetry{}))
 
 	// verify
 	assert.NoError(t, err)

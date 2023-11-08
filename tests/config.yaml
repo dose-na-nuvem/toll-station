@@ -1,3 +1,9 @@
 server:
   http:
-    endpoint: localhost:8080
+    endpoint: 0.0.0.0:55000
+    read_header_timeout: 2000
+
+telemetry:
+  metrics:
+    endpoint: 0.0.0.0:9100
+

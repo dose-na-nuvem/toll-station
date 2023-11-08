@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"math/rand"
 	"net/http"
@@ -10,6 +11,9 @@ import (
 	// "github.com/dose-na-nuvem/customers/pkg/telemetry"
 	// "go.opentelemetry.io/otel/attribute"
 	// "go.opentelemetry.io/otel/trace"
+	"github.com/dose-na-nuvem/toll-station/pkg/telemetry"
+	"go.opentelemetry.io/otel/attribute"
+	otelmetric "go.opentelemetry.io/otel/metric"
 	"go.uber.org/zap"
 )
 
@@ -21,23 +25,35 @@ var _ http.Handler = (*TollStationHandler)(nil)
 // }
 
 type TollStationHandler struct {
-	logger *zap.Logger
+	logger    *zap.Logger
+	telemetry *telemetry.Telemetry
 	// store  CustomerStore
 }
 
-func NewTollStationHandler(logger *zap.Logger /*, store CustomerStore*/) *TollStationHandler {
+func NewTollStationHandler(logger *zap.Logger, tm *telemetry.Telemetry /*, store CustomerStore*/) *TollStationHandler {
 	return &TollStationHandler{
-		logger: logger,
+		logger:    logger,
+		telemetry: tm,
 		//store:  store,
 	}
 }
 
 func (h *TollStationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
+	startTime := time.Now()
+	// ctx := r.Context()
+	ctx := context.Background()
+
 	// Get the tag from the POST request.
 	tag := r.FormValue("tag")
 
 	gateOpenState := shouldOpenGate(tag)
+
+	attrs := otelmetric.WithAttributes(
+		attribute.Key("open").Bool(gateOpenState),
+	)
+	h.telemetry.TrafficCounter.Add(ctx, 1, attrs)
+
 	h.logger.Info("Estado do portão", zap.Bool("aberto", gateOpenState))
 
 	b, err := json.Marshal(gateOpenState)
@@ -50,6 +66,9 @@ func (h *TollStationHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
+
+	duration := time.Since(startTime).Abs().Milliseconds()
+	h.telemetry.GateHistogram.Record(r.Context(), duration, attrs)
 
 	// switch r.Method {
 	// case http.MethodPost:
