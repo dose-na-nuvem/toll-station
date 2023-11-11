@@ -35,7 +35,7 @@ func Execute() {
 	rootCmd.PersistentFlags().StringVar(&configFile, "config", "config.yaml",
 		"Define o arquivo de configuração a utilizar.")
 
-	startCmd.Flags().StringVar(&cfg.Server.HTTP.Endpoint, "server.http.endpoint", "localhost:56433",
+	startCmd.Flags().StringVar(&cfg.Server.HTTP.Endpoint, "server.http.endpoint", "0.0.0.0:56433",
 		"Endereço HTTP onde o serviço vai servir requisições.")
 
 	startCmd.Flags().DurationVar(&cfg.Server.HTTP.ReadHeaderTimeout, "server.http.readheadertimeout",
