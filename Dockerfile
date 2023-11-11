@@ -19,8 +19,6 @@ WORKDIR /app
 # Copy the built Go binary from the previous stage
 COPY --from=builder /app/toll-station .
 
-EXPOSE 8888
-EXPOSE 56433
 
 # Command to run the application
 ENTRYPOINT ["./toll-station"]
