@@ -6,9 +6,9 @@ Descreva de forma resumida o que esse PR faz.
 
 Marque com um `x` todas as opções que se aplicam ao seu PR:
 
-- [ ] _Breaking change_ (correção ou nova funcionalidade que impacta recursos existentes)
-- [ ] Nova funcionalidade (_non-breaking change_, adicionando novos recursos - monitor)
-- [ ] Correção (_non-breaking change_, corrigindo um recurso)
+- [ ] _Breaking change_ (correção ou nova funcionalidade que impacta o sistema)
+- [ ] Nova funcionalidade (_non-breaking change_, adicionando novos recursos)
+- [ ] Correção (_non-breaking change_, corrigindo uma funcionalidade)
 - [ ] Documentação
 
 ## Checklist
